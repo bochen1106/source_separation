@@ -7,12 +7,12 @@ import matplotlib.pyplot as plt
 
 import librosa
 import sys
-sys.path.append("../../func")
-import func_video
+
 
 SR = 8000
 DUR = 5 # sec
 #%%
+#path_data = "/Users/bochen/Desktop/data"
 path_data = "../../../data"
 path_track = os.path.join(path_data, "audio_track")
 path_single = os.path.join(path_data, "audio/single")
@@ -34,6 +34,8 @@ for data_type in ["train", "valid", "test"]:
     path_cur = os.path.join(path_single, data_type)
     if not os.path.exists(path_cur):
         os.makedirs(path_cur)
+        
+    i_sample = 0
     for i in idx[data_type]:
         filename = filenames[i]
         print filename
@@ -46,7 +48,8 @@ for data_type in ["train", "valid", "test"]:
         for j in range(n_seg):
             data = wav[j*DUR*sr : (j+1)*DUR*sr]
             name_dur = "%03d-%03d" % (j*DUR, (j+1)*DUR)
-            name_out = "vn%04d"%j + "@" + name_trk + "@" + name_dur
+            name_out = "vn%04d"%i_sample + "@" + name_trk + "@" + name_dur
+            i_sample += 1
             filename_out = os.path.join(path_cur, name_out) + ".wav"
             librosa.output.write_wav(filename_out, data, sr)
             

@@ -13,7 +13,7 @@ import func_video
 SR = 8000
 DUR = 5 # sec
 #%%
-path_data = "/Users/bochen/Desktop/data"
+path_data = "../../../data"
 path_track = os.path.join(path_data, "audio_track")
 path_single = os.path.join(path_data, "single")
 

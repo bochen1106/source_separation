@@ -34,7 +34,7 @@ offset_player = np.loadtxt(filename).astype("i")
 
 l = 100     # the size of the squared output video
 #%%
-for idx_track in idx_vn[20:21]:
+for idx_track in idx_vn[:1]:
         
     i_track = idx_track-1
     for i in range(44):

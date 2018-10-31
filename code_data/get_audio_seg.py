@@ -15,7 +15,7 @@ DUR = 5 # sec
 #%%
 path_data = "../../../data"
 path_track = os.path.join(path_data, "audio_track")
-path_single = os.path.join(path_data, "single")
+path_single = os.path.join(path_data, "audio/single")
 
 filenames = glob.glob(path_track + "/*.wav")
 filenames.sort()
@@ -46,7 +46,7 @@ for data_type in ["train", "valid", "test"]:
         for j in range(n_seg):
             data = wav[j*DUR*sr : (j+1)*DUR*sr]
             name_dur = "%03d-%03d" % (j*DUR, (j+1)*DUR)
-            name_out = "vn%04d"%j + name_trk + "@" + name_dur
+            name_out = "vn%04d"%j + "@" + name_trk + "@" + name_dur
             filename_out = os.path.join(path_cur, name_out) + ".wav"
             librosa.output.write_wav(filename_out, data, sr)
             

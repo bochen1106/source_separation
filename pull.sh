@@ -1,2 +1,2 @@
-git pull origin master -m "none"
+git pull origin master
 

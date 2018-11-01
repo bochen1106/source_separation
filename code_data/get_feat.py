@@ -9,7 +9,7 @@ import h5py
 import librosa
 import sys
 import util
-
+from sys import platform
 
 SR = 8000
 DUR = 5 # sec
@@ -17,8 +17,11 @@ random.seed(9999)
 TH_ACTIVE=40
 
 #%%
-#path_data = "/Users/bochen/Desktop/data"
-path_data = "../../../data"
+if sys.platform in ["linux", "linux2"]: # on server
+    path_data = "../../../data"
+if sys.platform == "darwin":    # on local mac
+    path_data = "/Users/bochen/Desktop/data"
+    
 path_seg = os.path.join(path_data, "audio_seg")
 path_set = os.path.join(path_data, "set_001")
 path_audio = os.path.join(path_set, "audio")

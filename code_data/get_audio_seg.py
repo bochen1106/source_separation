@@ -12,9 +12,11 @@ import sys
 SR = 8000
 DUR = 5 # sec
 #%%
-#path_data = "/Users/bochen/Desktop/data"
-path_data = "../../../data"
-
+if sys.platform in ["linux", "linux2"]: # on server
+    path_data = "../../../data"
+if sys.platform == "darwin":    # on local mac
+    path_data = "/Users/bochen/Desktop/data"
+ 
 path_track = os.path.join(path_data, "audio_track")
 path_seg = os.path.join(path_data, "audio_seg")
 if not os.path.exists(path_seg):

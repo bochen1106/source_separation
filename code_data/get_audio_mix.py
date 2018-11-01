@@ -76,10 +76,10 @@ n_sample["valid"] = 500
 n_sample["test"] = 500
 
 for data_type in ["train", "valid", "test"]:
+    print "##### %s #####" % data_type
     path_mix_cur = os.path.join(path_mix, data_type)
     if not os.path.exists(path_mix_cur):
         os.makedirs(path_mix_cur)
-    print "##### %s #####" % data_type
     
     filename = os.path.join(path_set, "names_"+data_type+".txt")
     names = [x.strip() for x in open(filename,"r").readlines()]

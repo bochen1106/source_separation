@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 
 import librosa
 import sys
+print "#######################"
+print "platform: " + sys.platform
+print "#######################"
 
 
 SR = 8000

@@ -9,7 +9,10 @@ import h5py
 import librosa
 import sys
 import util
-from sys import platform
+import sys
+print "#######################"
+print "platform: " + sys.platform
+print "#######################"
 
 SR = 8000
 DUR = 5 # sec

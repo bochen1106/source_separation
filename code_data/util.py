@@ -14,11 +14,10 @@ FRAME_LEN = 0.032
 FRAME_HOP = 0.008
 N_FFT = 256
 DIM_FEAT = 129
-TH_ACTIVE = 40
 
 #%%
 
-def cal_spec_mask(y, y1, y2):
+def cal_spec_mask(y, y1, y2, th_active=40):
     
     spec = librosa.core.stft(y=y, n_fft=N_FFT,
                              hop_length=int(np.floor(FRAME_HOP * SR)),
@@ -46,7 +45,7 @@ def cal_spec_mask(y, y1, y2):
     mag2 = librosa.core.amplitude_to_db(S=mag2, ref=1, amin=1e-10, top_db=None)
     
     mask = [(mag1 >= mag2), (mag1 < mag2)]
-    mask_active = mag >= (mag.max() - TH_ACTIVE)
+    mask_active = mag >= (mag.max() - th_active)
     mask = mask_active[None, ...] * mask
     
     return mag, pha, mask

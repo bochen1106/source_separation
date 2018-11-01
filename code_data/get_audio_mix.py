@@ -19,7 +19,7 @@ random.seed(9999)
 path_data = "../../../data"
 path_track = os.path.join(path_data, "audio_track")
 path_seg = os.path.join(path_data, "audio_seg")
-path_set = os.path.join(path_data, "set_001")
+path_set = os.path.join(path_data, "set_002")
 if not os.path.exists(path_set):
     os.makedirs(path_set)
 path_mix = os.path.join(path_set, "audio")
@@ -71,9 +71,9 @@ fid.close()
 print "generate audio mixtures"
 
 n_sample = {}
-n_sample["train"] = 2000
-n_sample["valid"] = 500
-n_sample["test"] = 500
+n_sample["train"] = 20
+n_sample["valid"] = 5
+n_sample["test"] = 5
 
 for data_type in ["train", "valid", "test"]:
     print "##### %s #####" % data_type

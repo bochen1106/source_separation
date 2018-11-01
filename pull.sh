@@ -1,5 +1,5 @@
 git add .
-git commit -m "something from server"
+git commit -m "something"
 git pull origin master
 
 

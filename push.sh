@@ -1,4 +1,4 @@
 git add .
-git commit -m "something from local"
+git commit -m "something"
 git push origin master
 

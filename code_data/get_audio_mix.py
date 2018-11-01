@@ -34,7 +34,8 @@ for data_type in ["train", "valid", "test"]:
     filenames.sort()
     
     names_mix = []
-    for i in range(n_sample[data_type]):
+    i_sample = 0
+    while i_sample < n_sample[data_type]:
         
         tmp = random.sample(filenames, 2)
         tmp.sort()      # avoid duplicate such as 0001-0002 and 0002-0001
@@ -47,8 +48,9 @@ for data_type in ["train", "valid", "test"]:
         else:
             names_mix.append(name_mix)
         
-        name_out = "%06d" % i + "@" + name_mix
+        name_out = "%06d" % i_sample + "@" + name_mix
         filename_out = os.path.join(path_mix_cur, name_out) + ".wav"
+        i_sample += 1
         
         wav1, sr = librosa.core.load(filename1, SR)
         wav2, sr = librosa.core.load(filename2, SR)

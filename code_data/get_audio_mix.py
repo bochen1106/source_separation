@@ -26,6 +26,7 @@ path_mix = os.path.join(path_set, "audio")
 
 
 #%% split set
+print "split train/valid/test for the audio segments"
 
 filenames = glob.glob(path_track + "/*.wav")
 filenames.sort()
@@ -67,6 +68,8 @@ fid.writelines(["%s\n" % x  for x in names_test])
 fid.close()
 
 #%%
+print "generate audio mixtures"
+
 n_sample = {}
 n_sample["train"] = 2000
 n_sample["valid"] = 500

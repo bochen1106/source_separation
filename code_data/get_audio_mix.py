@@ -71,9 +71,9 @@ fid.close()
 print "generate audio mixtures"
 
 n_sample = {}
-n_sample["train"] = 200
-n_sample["valid"] = 50
-n_sample["test"] = 50
+n_sample["train"] = 2000
+n_sample["valid"] = 500
+n_sample["test"] = 500
 
 for data_type in ["train", "valid", "test"]:
     print "##### %s #####" % data_type

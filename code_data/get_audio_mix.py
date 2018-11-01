@@ -19,7 +19,7 @@ random.seed(9999)
 path_data = "../../../data"
 path_track = os.path.join(path_data, "audio_track")
 path_seg = os.path.join(path_data, "audio_seg")
-path_set = os.path.join(path_data, "set_002")
+path_set = os.path.join(path_data, "set_001")
 if not os.path.exists(path_set):
     os.makedirs(path_set)
 path_mix = os.path.join(path_set, "audio")

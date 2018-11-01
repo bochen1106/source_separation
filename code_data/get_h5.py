@@ -65,6 +65,7 @@ for data_type in data_types:
         
     X = np.concatenate(X, axis=0)
     Y = np.concatenate(Y, axis=0)
+    info = sorted(info.items())
     
     mean_freq = np.mean(X, axis=0)
     std_freq = np.std(X, axis=0)

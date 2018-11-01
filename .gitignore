@@ -1,6 +1,6 @@
 *.py[cod]
 *.npy
 *.h5
-
+*.wav
 
 

@@ -49,6 +49,9 @@ for filename in filenames:
         names_valid.append(name)
     if id_trk in id_test:
         names_test.append(name)
+names_train.sort()
+names_valid.sort()
+names_test.sort()
 
 filename = os.path.join(path_set, "names_train.txt")
 fid = open(filename, "w")

@@ -83,6 +83,7 @@ for data_type in ["train", "valid", "test"]:
     
     filename = os.path.join(path_set, "names_"+data_type+".txt")
     names = [x.strip() for x in open(filename,"r").readlines()]
+    names.sort()
     
     names_mix = []
     i_sample = 0

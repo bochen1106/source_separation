@@ -72,8 +72,7 @@ class Trainer(object):
         model = func_model.build_dpcl()
         logger.log("model summary:")
         model.summary()
-        if hasattr("logger", "file"):
-            model.summary(print_fn=lambda x: logger.file.write(x + '\n'))
+        model.summary(print_fn=lambda x: logger.file.write(x + '\n'))
             
         self.model = model
         logger.log("finish building the model")
@@ -102,4 +101,5 @@ if __name__ == "__main__":
     
     t = Trainer(config, logger)
     t.build_model()
+    
 

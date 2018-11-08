@@ -26,7 +26,7 @@ BATCH_SIZE = 64
   
 class Reader(threading.Thread):
     
-    def __init__(self, filename_data, filename_info):
+    def __init__(self, filename_data, filename_info, config=None):
         
         threading.Thread.__init__(self)
         
@@ -151,33 +151,33 @@ if __name__ == "__main__":
     reader.close()
     
 #%%
-idx = 0
-mag = data[idx, ...]
-mask = label[idx, ...]
-name = names[idx]
-mag = mag.T
-mask_1 = mask[:, :, 0].T
-mask_2 = mask[:, :, 1].T
-fig, ax = plt.subplots(3, 1)
-ax[0].imshow(mag)
-ax[1].imshow(mask_1)
-ax[2].imshow(mask_2)
-
-
-path_feat = os.path.join(path_set, "feat", "test")
-filename_feat = os.path.join(path_feat, name) + ".h5"
-f = h5py.File(filename_feat)
-mag = np.array(f["mag"])
-mask = np.array(f["mask"])
-f.close()
-mask_1 = mask[0, ...]
-mask_2 = mask[1, ...]
-
-fig, ax = plt.subplots(3, 1)
-ax[0].imshow(mag)
-ax[1].imshow(mask_1)
-ax[2].imshow(mask_2)
- 
+    idx = 0
+    mag = data[idx, ...]
+    mask = label[idx, ...]
+    name = names[idx]
+    mag = mag.T
+    mask_1 = mask[:, :, 0].T
+    mask_2 = mask[:, :, 1].T
+    fig, ax = plt.subplots(3, 1)
+    ax[0].imshow(mag)
+    ax[1].imshow(mask_1)
+    ax[2].imshow(mask_2)
+    
+    
+    path_feat = os.path.join(path_set, "feat", "test")
+    filename_feat = os.path.join(path_feat, name) + ".h5"
+    f = h5py.File(filename_feat)
+    mag = np.array(f["mag"])
+    mask = np.array(f["mask"])
+    f.close()
+    mask_1 = mask[0, ...]
+    mask_2 = mask[1, ...]
+    
+    fig, ax = plt.subplots(3, 1)
+    ax[0].imshow(mag)
+    ax[1].imshow(mask_1)
+    ax[2].imshow(mask_2)
+     
     
     
     

@@ -1,4 +1,10 @@
-# this code is not guaranteed
+
+import tensorflow as tf
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+set_session(tf.Session(config=config))
+
 
 import os
 import glob

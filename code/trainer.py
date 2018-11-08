@@ -50,18 +50,26 @@ class Trainer(object):
         
         filename_data = os.path.join(path_h5, "train.h5")
         filename_info = os.path.join(path_h5, "train.pickle")
-        self.data_train = Reader(filename_data, filename_info, config=config)
+        data_train = Reader(filename_data, filename_info, config=config)
         logger.log("finish loading train data from: " + filename_data)
+        logger.log("total number of train data samples: %d" % len(data_train.data_flow))
         
         filename_data = os.path.join(path_h5, "valid.h5")
         filename_info = os.path.join(path_h5, "valid.pickle")
-        self.data_valid = Reader(filename_data, filename_info, config=config)
+        data_valid = Reader(filename_data, filename_info, config=config)
         logger.log("finish loading valid data from: " + filename_data)
-        
+        logger.log("total number of valid data samples: %d" % len(data_valid.data_flow))
+
         filename_data = os.path.join(path_h5, "test.h5")
         filename_info = os.path.join(path_h5, "test.pickle")
-        self.data_test = Reader(filename_data, filename_info, config=config)
+        data_test = Reader(filename_data, filename_info, config=config)
         logger.log("finish loading test data from: " + filename_data)
+        logger.log("total number of test data samples: %d" % len(data_test.data_flow))
+        
+        self.data_train = data_train
+        self.data_valid = data_valid
+        self.data_test = data_test
+        
         
     def build_model(self):
         
@@ -77,7 +85,98 @@ class Trainer(object):
         self.model = model
         logger.log("finish building the model")
         
+    def run(self):
         
+        def eval_loss(model, data):
+            
+            loss = []
+            n_sample = len(data.data_flow)
+            batch_per_reader = n_sample / data.batch_size
+            for idx_batch in range(batch_per_reader):
+                data, label, names = data.iterate_batch()
+                loss_eval = model.test_on_batch(x=[data], y=[label])
+                loss.append(loss_eval)
+            data.reset()
+            return np.mean(loss)
+        
+        config = self.config
+        logger = self.logger
+        logger.log("train the model")
+        
+        path_exp = os.path.join(config.get("path_exp"), config.get("exp_idx"))
+        if not os.path.exists(path_exp):
+            os.makedirs(path_exp)
+        
+        filename_model = os.path.join(path_exp, "model") + ".h5"
+        
+        batch_size = config.get("batch_size")
+        num_epoch = config.get("num_epoch")
+        num_patience = config.get("num_patience")
+        
+        data_train = self.data_train
+        data_valid = self.data_valid
+        data_test = self.data_test
+        model = self.model
+        
+        n_sample = len(data_train.data_flow)
+        num_iter_per_epoch = (n_sample // batch_size) + 1
+        num_iter_max = num_epoch * num_iter_per_epoch
+        valid_freq = max(5, num_iter_per_epoch//5)
+        disp_freq = max(5, num_iter_per_epoch//25)
+        
+        logger.log("--------------------------------------------------")
+        logger.log("training condition:")
+        logger.log("--------------------------------------------------")
+        logger.log("batch size: %d" % batch_size)
+        logger.log("interations per epoch: %d" % num_iter_per_epoch)
+        logger.log("number of epoch: %d" % num_epoch)
+        logger.log("max number of interations: %d" % num_iter_max)
+        logger.log("display train loss every %d interations" % disp_freq)
+        logger.log("compute valid loss every %d interations" % valid_freq)
+        logger.log("--------------------------------------------------")
+        
+        
+        loss_train_hist = []
+        loss_train_hist_ave = []
+        loss_valid_best = float("inf")
+        loss_valid_hist = []
+        n_iter = 1
+        
+        try:
+            while n_iter < num_iter_max:
+                
+                data, label, names = data_train.iterate_batch()
+                loss = model.train_on_batch(x=[data], y=[label])
+                loss_train_hist.append(loss)
+                loss_train_hist_ave.append(np.mean(loss_train_hist))
+                
+                if np.mod(n_iter, disp_freq) == 0:
+                    logger.log("iter: %d of %d, train loss: %.4f" % 
+                               (n_iter, num_iter_max, loss_train_hist_ave[-1]))
+                
+                if np.mod(n_iter, valid_freq) == 0:
+                    logger.log("computing loss on valid data ...")
+                    loss_valid = eval_loss(model=model, data=data_valid)
+                    loss_valid_hist.append(loss_valid)
+                    logger.log("current valid loss: %.4f (best: %.4f)" % (loss_valid, loss_valid_best))
+                    
+                    if loss_valid < loss_valid_best:
+                        loss_valid_best = loss_valid
+                        num_iter_max = max(num_iter_max, n_iter + num_patience*num_iter_per_epoch)
+                        logger.log( "saving the model at iter: %d" % n_iter )
+                        model.save(filename_model)
+                        logger.log( "model saved as %s" % filename_model )
+                n_iter += 1
+                
+        except KeyboardInterrupt:
+            logger.log("Training interrupted ...")
+            
+        data_train.close()
+        data_valid.close()
+        data_test.close()
+        
+        logger.log("training is done")
+        logger.log("================================================")
         
 #%%
 from util.config import Config
@@ -101,5 +200,7 @@ if __name__ == "__main__":
     
     t = Trainer(config, logger)
     t.build_model()
+    t.load_data()
+    t.run()
     
 

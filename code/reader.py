@@ -18,11 +18,6 @@ print "#######################"
 print "platform: " + sys.platform
 print "#######################"
 
-NORMAL_TYPE = "glob"    # either "glob" or "freq" or None
-SEED = 999
-DIM_FEAT = 129
-NUM_FRAME = 626
-BATCH_SIZE = 64
   
 class Reader(threading.Thread):
     
@@ -30,19 +25,26 @@ class Reader(threading.Thread):
         
         threading.Thread.__init__(self)
         
+        self.config = config
         self.f = f = h5py.File(filename_data)
         self.info = info = pickle.load(open(filename_info, "r"))
         
-        if NORMAL_TYPE == "glob":
+        norm_type = config.get("norm_type")
+        seed = config.get("seed_reader")
+        
+        if norm_type == "glob":
             data_mean = np.array(f["mean_glob"])
             data_mean = data_mean[None, ...]
             data_std = np.array(f["std_glob"])
             data_std = data_std[None, ...]
-        if NORMAL_TYPE == "freq":
+        elif norm_type == "freq":
             data_mean = np.array(f["mean_freq"])
-            data_mean = np.array(f["std_freq"])
+            data_std = np.array(f["std_freq"])
+        else:
+            data_mean = 0
+            data_std = 1
         
-        self.rng = np.random.RandomState(seed=SEED)
+        self.rng = np.random.RandomState(seed=seed)
         self.data_flow = range(len(info))
         self.rng.shuffle(self.data_flow)
         
@@ -58,9 +60,11 @@ class Reader(threading.Thread):
         
     def run(self):
         
-        dim_feat = DIM_FEAT
-        num_frame = NUM_FRAME
-        batch_size = BATCH_SIZE
+        config = self.config
+        
+        dim_feat = config.get("dim_feat")
+        num_frame = config.get("num_frame")
+        batch_size = config.get("batch_size")
         data_flow = self.data_flow
         
         while self.running:
